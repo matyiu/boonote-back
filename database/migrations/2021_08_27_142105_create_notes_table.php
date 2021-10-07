@@ -18,7 +18,7 @@ class CreateNotesTable extends Migration
             $table->timestamps();
             $table->string('title');
             $table->longText('note')->nullable();
-            $table->tinyInteger('rate')->unsigned();
+            $table->tinyInteger('rate')->unsigned()->nullable();
             $table->tinyInteger('state');
             $table->string('cover')->nullable();
             $table->tinyInteger('permission');
