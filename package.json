@@ -1,4 +1,5 @@
 {
+    "name": "boonote-back",
     "private": true,
     "scripts": {
         "dev": "npm run development",

@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'Jefferson Valle',
                 'email' => 'valleespinozajefferson@gmail.com',
                 'username' => 'rjeffvalle',
-                'password' => 'weakPassword',
+                'password' => bcrypt('weakPassword'),
                 'email_verified_at' => now(),
             ]);
         }

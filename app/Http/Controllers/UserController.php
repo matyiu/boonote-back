@@ -37,7 +37,7 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->description = $this->selectDataToSave('description', $request);
         $user->email = $data['email'];
-        $user->password = $this->_isPasswordEmpty($request) ? $user->password : $data['password'];
+        $user->password = $this->_isPasswordEmpty($request) ? $user->password : bcrypt($data['password']);
         $user->profile_pic = $this->selectDataToSave('profile_pic', $request);
 
         if (!$user->save()) {

@@ -28,15 +28,13 @@ class AuthController extends Controller
         ];
         $credentials[$userIdField] = $request->get('username');
 
-        if (!Auth::attempt($credentials)) {
-            return $this->sendError('Username or password is incorrect.', [], 400);
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return $this->sendResponse(Auth::user(), 'User logged in succesfully.');
         }
 
-        $user = Auth::user();
-
-        return $this->sendResponse([
-            'token' => $user->createToken('ApiAuthToken')->plainTextToken,
-        ], 'User logged in succesfully.');
+        return $this->sendError('Username or password is incorrect.', [], 400);
     }
 
     public function register(Request $request)
@@ -64,14 +62,16 @@ class AuthController extends Controller
             return $this->sendError('The server couldn\'t register the user.', 500);
         }
 
-        return $this->sendResponse([
-            'token' => $user->createToken('ApiAuthToken')->plainTextToken,
-        ], 'User registered succesfully.');
+        return $this->sendResponse(null, 'User registered succesfully.');
     }
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         return $this->sendResponse(null, 'Logged out.');
     }
