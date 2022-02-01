@@ -20,21 +20,24 @@ use App\Http\Controllers\UserController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
+Route::delete('logout', [AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Notes part
     Route::resource('notes', NoteController::class)->except([
         'edit', 'create'
     ]);
-    Route::post('notes/{id}/tags', [TagController::class, 'store']);
-    Route::delete('notes/{id}/tags/{tagId}', [NoteController::class, 'detachTag']);
-    Route::post('notes/{id}/tags/{tagId}', [NoteController::class, 'attachTag']);
+    Route::prefix('notes')->group(function() {
+        Route::post('{id}/tags', [TagController::class, 'store']);
+        Route::delete('{id}/tags/{tagId}', [NoteController::class, 'detachTag']);
+        Route::post('{id}/tags/{tagId}', [NoteController::class, 'attachTag']);
+    });
 
     // User part
-    Route::get('/profile', [UserController::class, 'show']);
-    Route::put('/profile', [UserController::class, 'update']);
-    Route::put('/profile/tags/{id}', [TagController::class, 'update']);
-    Route::delete('/profile/tags/{id}', [TagController::class, 'destroy']);
-
-    Route::delete('logout', [AuthController::class, 'logout']);
+    Route::prefix('profile')->group(function() {
+        Route::get('/', [UserController::class, 'show']);
+        Route::put('/', [UserController::class, 'update']);
+        Route::put('/tags/{id}', [TagController::class, 'update']);
+        Route::delete('/tags/{id}', [TagController::class, 'destroy']);
+    });
 });
