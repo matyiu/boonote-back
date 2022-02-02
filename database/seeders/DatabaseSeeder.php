@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Note;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Author;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -29,13 +30,17 @@ class DatabaseSeeder extends Seeder
 
         $notes = Note::factory()->count(30)->create();
         $categories = Category::factory()->count(7)->create();
+        $authors = Author::factory()->count(7)->create();
 
         $user = User::find(1);
         $user->notes()->saveMany($notes);
         $user->categories()->saveMany($categories);
+        $user->authors()->saveMany($authors);
 
         $notes->each(function ($note) use ($categories) {
             $note->category()->associate($categories->random());
+            $note->authors()->attach(rand(1, 7));
+
             $note->save();
         });
     }

@@ -63,4 +63,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Category::class);
     }
+
+    /**
+     * Get all authors attached to the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function authors(): HasMany
+    {
+        return $this->hasMany(Author::class);
+    }
 }
