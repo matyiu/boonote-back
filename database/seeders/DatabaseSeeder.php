@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Note;
-use App\Models\Tag;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -28,14 +28,15 @@ class DatabaseSeeder extends Seeder
         }
 
         $notes = Note::factory()->count(30)->create();
-        $tags = Tag::factory()->count(7)->create();
+        $categories = Category::factory()->count(7)->create();
 
         $user = User::find(1);
         $user->notes()->saveMany($notes);
-        $user->tags()->saveMany($tags);
+        $user->categories()->saveMany($categories);
 
-        $notes->each(function ($note) {
-            $note->tags()->attach(rand(1, 7));
+        $notes->each(function ($note) use ($categories) {
+            $note->category()->associate($categories->random());
+            $note->save();
         });
     }
 }

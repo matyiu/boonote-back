@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TagController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\UserController;
@@ -28,16 +28,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         'edit', 'create'
     ]);
     Route::prefix('notes')->group(function() {
-        Route::post('{id}/tags', [TagController::class, 'store']);
-        Route::delete('{id}/tags/{tagId}', [NoteController::class, 'detachTag']);
-        Route::post('{id}/tags/{tagId}', [NoteController::class, 'attachTag']);
+        Route::post('{id}/tags', [CategoryController::class, 'store']);
+        Route::delete('{id}/tags/{tagId}', [NoteController::class, 'detachCategory']);
+        Route::post('{id}/tags/{tagId}', [NoteController::class, 'attachCategory']);
     });
 
     // User part
     Route::prefix('profile')->group(function() {
         Route::get('/', [UserController::class, 'show']);
         Route::put('/', [UserController::class, 'update']);
-        Route::put('/tags/{id}', [TagController::class, 'update']);
-        Route::delete('/tags/{id}', [TagController::class, 'destroy']);
+        Route::put('/tags/{id}', [CategoryController::class, 'update']);
+        Route::delete('/tags/{id}', [CategoryController::class, 'destroy']);
     });
 });

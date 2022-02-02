@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class TagController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -33,18 +33,18 @@ class TagController extends Controller
             return $this->sendError('Invalid Data.', $validator->errors()->toArray(), 400);
         }
 
-        $tag = new Tag;
+        $tag = new Category;
         $tag->name = $request->get('name');
 
         if (!$tag->save()) {
-            return $this->sendError('Tag couldn\'t be created.', [], 500);
+            return $this->sendError('Category couldn\'t be created.', [], 500);
         } elseif (!$user->tags()->save($tag)) {
             $tag->delete();
 
-            return $this->sendError('Tag couldn\'t be assigned to user.', [], 500);
+            return $this->sendError('Category couldn\'t be assigned to user.', [], 500);
         }
 
-        $messages = ['Tag stored correctly.'];
+        $messages = ['Category stored correctly.'];
         if (!$note->tags()->save($tag)) {
             $messages[] = 'Warning: tag couldn\'t be assigned to note.';
         }
@@ -65,7 +65,7 @@ class TagController extends Controller
         $tag = $user->tags()->where('id', $id)->first();
 
         if (!$tag) {
-            return $this->sendError('Tag couldn\'t be found.');
+            return $this->sendError('Category couldn\'t be found.');
         }
 
         $validator = Validator::make($request->all(), [
@@ -79,10 +79,10 @@ class TagController extends Controller
         $tag->name = $request->get('name');
 
         if (!$tag->save()) {
-            return $this->sendError('Tag couldn\'t be updated.', [], 500);
+            return $this->sendError('Category couldn\'t be updated.', [], 500);
         }
 
-        return $this->sendResponse(null, 'Tag updated correctly.');
+        return $this->sendResponse(null, 'Category updated correctly.');
     }
 
     /**
@@ -97,13 +97,13 @@ class TagController extends Controller
         $tag = $user->tags()->where('id', $id)->first();
 
         if (!$tag) {
-            return $this->sendError('Tag couldn\'t be found.');
+            return $this->sendError('Category couldn\'t be found.');
         }
 
         if (!$tag->delete()) {
-            return $this->sendError('Tag couldn\'t be deleted.', [], 500);
+            return $this->sendError('Category couldn\'t be deleted.', [], 500);
         }
 
-        return $this->sendResponse(null, 'Tag deleted correctly.');
+        return $this->sendResponse(null, 'Category deleted correctly.');
     }
 }

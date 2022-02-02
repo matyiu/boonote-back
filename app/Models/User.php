@@ -59,8 +59,8 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function tags(): HasMany
+    public function categories(): HasMany
     {
-        return $this->hasMany(Tag::class);
+        return $this->hasMany(Category::class);
     }
 }

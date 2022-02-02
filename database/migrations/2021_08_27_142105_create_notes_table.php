@@ -23,6 +23,7 @@ class CreateNotesTable extends Migration
             $table->string('cover')->nullable();
             $table->tinyInteger('permission');
             $table->foreignId('user_id')->index()->nullable();
+            $table->foreignId('category_id')->index()->nullable();
         });
     }
 

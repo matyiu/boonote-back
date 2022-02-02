@@ -4,23 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use App\Models\User;
+use App\Services\NoteService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class NoteController extends Controller
 {
+    public function __construct(
+        protected NoteService $noteService
+    )
+    {}
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = User::findOrFail(Auth::id());
-        $notes = $user->notes;
-
-        return $this->sendResponse($notes->toArray(), 'Notes retrieved correctly.');
+        $notes = $this->noteService->getAll($request->user());
+        return $this->sendResponse($notes, 'Notes retrieved correctly.');
     }
 
     /**
@@ -145,7 +149,7 @@ class NoteController extends Controller
         return $this->sendResponse(null, 'Note deleted succesfully');
     }
 
-    public function detachTag($id, $tagId)
+    public function detachCategory($id, $tagId)
     {
         $user = User::findOrFail(Auth::id());
         $note = $user->notes()->where('id', $id)->first();
@@ -156,10 +160,10 @@ class NoteController extends Controller
 
         $note->tags()->detach($tagId);
 
-        return $this->sendResponse(null, 'Tag detached correctly.');
+        return $this->sendResponse(null, 'Category detached correctly.');
     }
 
-    public function attachTag($id, $tagId)
+    public function attachCategory($id, $tagId)
     {
         $user = User::findOrFail(Auth::id());
         $note = $user->notes()->where('id', $id)->first();
@@ -169,15 +173,15 @@ class NoteController extends Controller
         }
 
         if ($note->tags()->where('tag_id', $tagId)->first()) {
-            return $this->sendResponse(null, 'Tag already attached to note.');
+            return $this->sendResponse(null, 'Category already attached to note.');
         }
 
         if (!$user->tags()->where('id', $tagId)->first()) {
-            return $this->sendError('Tag couldn\'t be found.');
+            return $this->sendError('Category couldn\'t be found.');
         }
 
         $note->tags()->attach($tagId);
 
-        return $this->sendResponse(null, 'Tag attached correctly.');
+        return $this->sendResponse(null, 'Category attached correctly.');
     }
 }
