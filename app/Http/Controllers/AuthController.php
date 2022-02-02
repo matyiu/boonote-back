@@ -4,13 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LogInRequest;
 use App\Http\Requests\SignUpRequest;
-use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function __construct(
+        protected UserService $userService
+    )
+    {}
+
     public function login(LogInRequest $request)
     {
         $data = $request->validated();
@@ -29,15 +33,10 @@ class AuthController extends Controller
 
     public function register(SignUpRequest $request)
     {
-        // TODO: move user creation to model
         $data = $request->validated();
-        $user = new User;
-        $user->username = $data['username'];
-        $user->email = $data['email'];
-        $user->name = $data['name'];
-        $user->password = bcrypt($data['password']);
+        $user = $this->userService->create($data);
 
-        if ($user->save() === false) {
+        if ($user === false) {
             return $this->sendError('The server couldn\'t register the user.', 500);
         }
 
