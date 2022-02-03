@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Note;
+use App\Http\Requests\NoteRequest;
 use App\Models\User;
 use App\Services\NoteService;
 use Illuminate\Http\Request;
@@ -30,41 +30,13 @@ class NoteController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\NoteRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NoteRequest $request)
     {
-        $user = User::findOrFail(Auth::id());
-
-        $validator = Validator::make($request->all(), [
-            'note' => 'string|nullable',
-            'rate' => 'integer|nullable|numeric|gte:0|lte:10',
-            'state' => 'integer|required|numeric|between:0,5',
-            'cover' => 'nullable|url|string|max:255',
-            'permission' => 'required|integer|numeric|between:0,2',
-            'title' => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError('Invalid Data.', $validator->errors()->toArray(), 400);
-        }
-
-        $data = $request->all();
-        $note = new Note;
-        $note->title = $data['title'];
-        $note->note = $data['note'] ?? null;
-        $note->rate = $data['rate'] ?? 0;
-        $note->state = $data['state'];
-        $note->cover = $data['cover'] ?? null;
-        $note->permission = $data['permission'];
-
-        if (!$note->save()) {
-            return $this->sendError('Note couldn\'t be created.', null, 500);
-        }
-
-        if (!$user->notes()->save($note)) {
-            $note->delete();
-
+        $note = $this->noteService->create($request->validated());
+        if (!$note) {
             return $this->sendError('Note couldn\'t be created.', null, 500);
         }
 

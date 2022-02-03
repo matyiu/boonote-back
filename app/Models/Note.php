@@ -12,6 +12,17 @@ class Note extends Model
     use HasFactory;
 
     /**
+     * Mass assignment values
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'state',
+        'permission'
+    ];
+
+    /**
      * The note that belongs to the category
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
