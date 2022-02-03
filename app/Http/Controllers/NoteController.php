@@ -68,7 +68,7 @@ class NoteController extends Controller
             return $this->sendError('Note couldn\'t be created.', null, 500);
         }
 
-        return $this->sendResponse(null, 'Note stored correctly.');
+        return $this->sendResponse($note->toArray(), 'Note stored correctly.');
     }
 
     /**
