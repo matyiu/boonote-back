@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AuthorController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\UserController;
 
@@ -42,5 +43,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('user')->group(function () {
         Route::get('/categories', [CategoryController::class, 'index']);
+        Route::get('/authors', [AuthorController::class, 'index']);
     });
 });
