@@ -4,12 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\User;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
+    public function __construct(
+        protected CategoryService $categoryService
+    )
+    {}
+
+    /**
+     * Get all categories from current authenticated user
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $categories = $this->categoryService->getAll();
+
+        return $this->sendResponse($categories, 'Categories retrieved correctly');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
