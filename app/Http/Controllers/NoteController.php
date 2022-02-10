@@ -99,7 +99,7 @@ class NoteController extends Controller
             return $this->sendError('Note for user "' . $user->username . ' couldn\'t be updated.');
         }
 
-        return $this->sendResponse(null, 'Note updated correctly.');
+        return $this->sendResponse($note, 'Note updated correctly.');
     }
 
     /**
