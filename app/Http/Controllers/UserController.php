@@ -44,7 +44,7 @@ class UserController extends Controller
             return $this->sendError('User data couldn\'t be updated.', [], 500);
         }
 
-        return $this->sendResponse(null, 'User data updated correctly.');
+        return $this->sendResponse($user->toArray(), 'User data updated correctly.');
     }
 
     private function selectDataToSave($key, $request)
@@ -62,6 +62,6 @@ class UserController extends Controller
     {
         $data = $request->all();
 
-        return !isset($data['password']);
+        return !isset($data['password']) || empty($data['password']);
     }
 }
