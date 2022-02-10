@@ -45,4 +45,13 @@ class NoteService
 
         return $note;
     }
+
+    public function update($id, array $data): Note|false
+    {
+        $updatedData = array_filter($data, function ($key) {
+           return $key !== 'id';
+        }, ARRAY_FILTER_USE_KEY);
+
+        return $this->noteRepository->update($id, $updatedData);
+    }
 }

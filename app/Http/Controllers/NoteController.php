@@ -67,36 +67,11 @@ class NoteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(NoteRequest $request, $id)
     {
-        $user = User::findOrFail(Auth::id());
-        $note = $user->notes()->where('id', $id)->first();
+        $note = $this->noteService->update($id, $request->validated());
         if (!$note) {
-            return $this->sendError('Note couldn\'t be found.');
-        }
-
-        $validator = Validator::make($request->all(), [
-            'note' => 'string|nullable',
-            'rate' => 'integer|nullable|numeric|gte:0|lte:10',
-            'state' => 'integer|required|numeric|between:0,5',
-            'cover' => 'nullable|url|string|max:255',
-            'permission' => 'required|integer|numeric|between:0,2',
-            'title' => 'required|string',
-        ]);
-        if ($validator->fails()) {
-            return $this->sendError('Invalid Data.', $validator->errors()->toArray(), 400);
-        }
-
-        $data = $request->all();
-        $note->title = $data['title'];
-        $note->note = $data['note'] ?? null;
-        $note->rate = $data['rate'] ?? 0;
-        $note->state = $data['state'];
-        $note->cover = $data['cover'] ?? null;
-        $note->permission = $data['permission'];
-
-        if (!$note->save()) {
-            return $this->sendError('Note for user "' . $user->username . ' couldn\'t be updated.');
+            return $this->sendError('Note for user couldn\'t be updated.');
         }
 
         return $this->sendResponse($note, 'Note updated correctly.');

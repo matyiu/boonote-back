@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Note;
+use Illuminate\Support\Facades\Auth;
 
 class NoteRepository
 {
@@ -19,5 +20,15 @@ class NoteRepository
             'state' => $data['state'],
             'permission' => $data['permission']
         ]);
+    }
+
+    public function update(int $id, array $data): Note
+    {
+        $user = Auth::user();
+        $note = $user->notes()->where('id', $id)->first();
+        $note->fill($data);
+        $note->save();
+
+        return $note;
     }
 }

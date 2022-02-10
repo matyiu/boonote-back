@@ -33,6 +33,16 @@ class NoteRequest extends FormRequest
                 'permission' => 'required|integer|numeric|between:0,2',
                 'title' => 'required|string',
             ];
+        } 
+        elseif ($this->isMethod('put')) {
+            return [
+                'note' => 'string|nullable',
+                'rate' => 'integer|nullable|numeric|gte:0|lte:10',
+                'state' => 'integer|required|numeric|between:0,5',
+                'cover' => 'nullable|url|string|max:255',
+                'permission' => 'required|integer|numeric|between:0,2',
+                'title' => 'required|string',
+            ];
         }
     }
 }
